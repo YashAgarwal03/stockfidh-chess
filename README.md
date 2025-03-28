@@ -1,5 +1,5 @@
 
-![stockfish chess](chess_game.webq)
+![stockfish chess](https://github.com/YashAgarwal03/stockfish-chess/blob/main/chess_game.webp)
 
 # Chess Game with Stockfish
 
@@ -41,7 +41,7 @@ Ensure you have the following installed before running the game:
 
 5. **Run the Game**
    ```sh
-   python main.py
+   python folder name/app.py
    ```
 
 ## Usage
@@ -56,5 +56,5 @@ Feel free to contribute by opening issues or submitting pull requests.
 This project is licensed under the MIT License.
 
 ## Author
-[Your Name](https://github.com/your-username)
+Yash Agarwal
 
