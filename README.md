@@ -1,5 +1,5 @@
 
-![Chess Game](chess_game.webg)
+![stockfish chess](chess_game.webg)
 
 # Chess Game with Stockfish
 
