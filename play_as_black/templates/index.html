@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stockfish (White) vs You</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+</head>
+<body>
+    <div id="controls">
+        <button onclick="window.location.href='/'">New Game</button>
+        <div id="status"></div>
+    </div>
+    <div id="board" style="width: 70vh"></div>
+
+    <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let difficulty = parseInt(urlParams.get('difficulty')) || 20;
+    let board = null;
+
+    function initializeGame() {
+        // Start new game
+        $.post('/new-game', { difficulty: difficulty })
+        .done(data => {
+            board = Chessboard('board', {
+                position: data.fen,
+                orientation: 'black',
+                draggable: true,
+                pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
+                onDrop: handleMove
+            });
+            
+            // Make Stockfish first move
+            $.post('/stockfish-first-move', { difficulty: difficulty })
+            .done(data => {
+                board.position(data.fen);
+                $('#status').text("Stockfish made the first move!");
+            })
+            .fail(err => {
+                alert(`Stockfish failed: ${err.responseText}`);
+            });
+        })
+        .fail(err => {
+            alert(`Game start failed: ${err.responseText}`);
+        });
+    }
+
+    function handleMove(source, target) {
+        if(source === target) return;
+        
+        // Disable board during processing
+        board.draggable = false;
+        
+        $.ajax({
+            url: '/move',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                from: source,
+                to: target,
+                difficulty: difficulty
+            }),
+            success: data => {
+                board.position(data.fen);
+                $('#status').text(data.status);
+                if(data.stockfish_move) {
+                    $('#status').append(` | Stockfish moved: ${data.stockfish_move}`);
+                }
+                board.draggable = true;
+            },
+            error: err => {
+                alert(err.responseJSON.error);
+                board.position(board.fen());
+                board.draggable = true;
+            }
+        });
+    }
+
+    // Start the game
+    initializeGame();
+    </script>
+</body>
+</html>

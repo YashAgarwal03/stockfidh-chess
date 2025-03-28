@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup - Play as Black</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="setup-container">
+        <h1>Play as Black vs Stockfish</h1>
+        <form action="/game" method="GET">
+            <div class="form-group">
+                <label>Select Difficulty:</label>
+                <select name="difficulty">
+                    <option value="1">Easy</option>
+                    <option value="10">Medium</option>
+                    <option value="20" selected>Hard</option>
+                </select>
+            </div>
+            <button type="submit" class="play-btn">Start Game</button>
+        </form>
+    </div>
+</body>
+</html>
